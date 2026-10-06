@@ -1,0 +1,1709 @@
+# MEGA PROMPT: SMART OFFICE AUTOMATION & ENERGY MANAGEMENT SYSTEM
+
+## 1. Project Title
+
+**Smart Office Automation & Energy Management System**
+
+Build a complete, modern, intelligent office-management platform that automatically manages:
+
+- 💡 Office lighting
+- 🌡️ Temperature and HVAC
+- 🏢 Meeting rooms
+- 👥 Occupancy detection
+- 🖥️ Office equipment
+- ⚡ Energy consumption
+- 📅 Employee schedules
+- 🔐 User requirements and permissions
+- 📊 Energy analytics
+- 🚨 Alerts and notifications
+
+The system should reduce energy wastage, improve employee comfort, optimize meeting-room usage, and provide administrators with real-time control and analytics.
+
+---
+
+# 2. Main Objective
+
+Create an intelligent system that continuously monitors office occupancy, schedules, room conditions, equipment usage, and energy consumption.
+
+The system should automatically make decisions such as:
+
+- Turn lights ON when people enter a room.
+- Turn lights OFF when a room becomes vacant.
+- Automatically adjust brightness according to occupancy and daylight.
+- Maintain comfortable temperature based on occupancy and user preferences.
+- Reduce HVAC operation when rooms are empty.
+- Automatically prepare meeting rooms before scheduled meetings.
+- Turn off unnecessary equipment after office hours.
+- Detect unused rooms and release/cancel their reservation after a configurable grace period.
+- Monitor energy consumption in real time.
+- Detect unusual energy consumption.
+- Recommend energy-saving actions.
+- Allow authorized users to manually override automation.
+- Return to automatic mode after the override expires.
+- Provide administrators with complete monitoring and control.
+
+---
+
+# 3. User Roles
+
+Implement role-based access control.
+
+## Admin
+
+Admin can:
+
+- Add/remove users.
+- Manage departments.
+- Add/remove rooms.
+- Configure sensors.
+- Configure lighting.
+- Configure HVAC.
+- Configure equipment.
+- Configure automation rules.
+- View energy analytics.
+- View occupancy analytics.
+- View meeting-room bookings.
+- View alerts.
+- Control devices manually.
+- Configure office schedules.
+- Set temperature limits.
+- Set energy-saving policies.
+
+## Manager
+
+Manager can:
+
+- View department rooms.
+- Book meeting rooms.
+- View occupancy.
+- Set meeting requirements.
+- View energy usage for their department.
+- Control authorized devices.
+
+## Employee
+
+Employee can:
+
+- View available meeting rooms.
+- Book meeting rooms.
+- Set preferred temperature.
+- Set lighting preferences.
+- View their room bookings.
+- Request equipment.
+- View basic energy information.
+
+## Facility Manager
+
+Facility Manager can:
+
+- Monitor all sensors.
+- Monitor HVAC.
+- Monitor lighting.
+- Monitor equipment.
+- Respond to alerts.
+- Inspect energy consumption.
+- Control devices.
+- Schedule maintenance.
+
+---
+
+# 4. Dashboard
+
+Create a professional dashboard with a modern responsive UI.
+
+Dashboard should display:
+
+### Overview Cards
+
+- Total employees
+- Currently occupied rooms
+- Available meeting rooms
+- Current energy consumption
+- Today's energy consumption
+- Current office temperature
+- Active devices
+- Energy savings percentage
+
+### Live Office Status
+
+Display a visual office layout/map.
+
+Each room should show:
+
+- Room name
+- Occupancy
+- Temperature
+- Humidity
+- Light status
+- HVAC status
+- Meeting status
+- Energy consumption
+- Room availability
+
+Use color/status indicators:
+
+- 🟢 Available
+- 🔴 Occupied
+- 🟡 Reserved
+- 🔵 Maintenance
+- ⚫ Offline
+
+---
+
+# 5. Occupancy Management
+
+Implement occupancy detection.
+
+Sensors can provide:
+
+- Motion
+- PIR detection
+- People count
+- Door entry/exit
+- Bluetooth/Wi-Fi presence
+- Camera-based occupancy count (optional)
+
+Create an occupancy engine.
+
+Example:
+
+IF occupancy > 0:
+
+    room.status = OCCUPIED
+
+ELSE:
+
+    room.status = VACANT
+
+Use configurable vacancy timeout.
+
+Example:
+
+    vacancy_timeout = 10 minutes
+
+If no movement is detected for 10 minutes:
+
+    room.status = VACANT
+
+Do not immediately turn devices off because temporary inactivity may occur.
+
+---
+
+# 6. Smart Lighting System
+
+Implement intelligent lighting control.
+
+Each room should have:
+
+- Light status
+- Brightness
+- Color temperature
+- Power consumption
+- Daylight level
+- Occupancy
+
+Automation logic:
+
+### Room occupied
+
+Turn lights ON.
+
+Brightness should depend on:
+
+- Occupancy
+- Natural daylight
+- User preference
+- Time of day
+
+Example:
+
+IF occupancy > 0 AND daylight < threshold:
+
+    lights = ON
+
+IF occupancy > 0 AND daylight is high:
+
+    reduce brightness
+
+IF occupancy = 0 for vacancy_timeout:
+
+    lights = OFF
+
+---
+
+# 7. Smart HVAC / Temperature Management
+
+Each room should have:
+
+- Current temperature
+- Target temperature
+- Humidity
+- HVAC status
+- Fan speed
+- Cooling/heating status
+
+Default comfortable temperature:
+
+**22°C–24°C**
+
+Allow users to configure preferences within administrator-defined limits.
+
+Example:
+
+IF room occupied:
+
+    maintain user/room target temperature
+
+IF room vacant:
+
+    switch HVAC to energy-saving mode
+
+IF room vacant for long duration:
+
+    turn HVAC OFF
+
+Before a scheduled meeting:
+
+    pre-condition room
+
+Example:
+
+Meeting:
+
+10:00 AM
+
+Room preparation:
+
+09:45 AM
+
+Start HVAC at:
+
+09:45 AM
+
+---
+
+# 8. Smart Meeting Room Management
+
+Create a complete meeting-room booking system.
+
+Features:
+
+- View available rooms
+- Book room
+- Cancel booking
+- Reschedule meeting
+- Recurring meetings
+- Meeting duration
+- Number of attendees
+- Required equipment
+- Preferred temperature
+- Lighting requirement
+
+Room filtering:
+
+User can search by:
+
+- Capacity
+- Location
+- Availability
+- Equipment
+- Temperature preference
+- Video conferencing availability
+- Whiteboard
+- Projector
+
+Example:
+
+User requests:
+
+"Find a room for 8 people at 2 PM with projector."
+
+System should automatically recommend the best available room.
+
+---
+
+# 9. Meeting Room No-Show Detection
+
+Implement intelligent no-show detection.
+
+Example:
+
+Meeting scheduled:
+
+2:00 PM – 3:00 PM
+
+If room remains unoccupied for:
+
+10 minutes
+
+System should ask:
+
+"Meeting room appears unused. Cancel reservation?"
+
+If configured for automatic cancellation:
+
+Cancel the booking.
+
+Then:
+
+- Turn off lights.
+- Reduce HVAC.
+- Release room.
+- Update room availability.
+
+---
+
+# 10. Smart Equipment Management
+
+Track office equipment.
+
+Examples:
+
+- Computers
+- Monitors
+- Printers
+- Projectors
+- Coffee machines
+- TVs
+- Conference systems
+- Chargers
+- IoT devices
+
+Each device should have:
+
+- Device ID
+- Device name
+- Room
+- Type
+- Status
+- Power consumption
+- Last active time
+- Assigned user
+- Maintenance status
+
+Example automation:
+
+IF equipment unused for configured duration:
+
+    switch to standby
+
+IF office closed:
+
+    turn off non-essential equipment
+
+Essential devices should remain ON.
+
+---
+
+# 11. Office Schedule
+
+Create configurable office schedules.
+
+Example:
+
+Office opening:
+
+09:00 AM
+
+Office closing:
+
+06:00 PM
+
+Working days:
+
+Monday–Friday
+
+Automation:
+
+Before opening:
+
+- Prepare common areas.
+- Pre-condition important rooms.
+- Turn on required systems.
+
+During working hours:
+
+- Normal automation.
+
+After closing:
+
+- Turn off unnecessary lighting.
+- Turn off non-essential equipment.
+- Reduce HVAC.
+- Lock unused rooms.
+- Generate daily energy report.
+
+---
+
+# 12. Holiday & Weekend Mode
+
+Implement:
+
+- Weekend mode
+- Holiday mode
+- Emergency mode
+- Maintenance mode
+
+During holidays:
+
+Turn off non-essential systems.
+
+Only critical equipment should remain active.
+
+---
+
+# 13. Energy Monitoring
+
+Create real-time energy monitoring.
+
+Track:
+
+- Room energy
+- Lighting energy
+- HVAC energy
+- Equipment energy
+- Total office energy
+
+Display:
+
+- kWh
+- Cost
+- Daily consumption
+- Weekly consumption
+- Monthly consumption
+- Energy-saving percentage
+- Peak consumption
+
+Dashboard charts:
+
+- Hourly consumption
+- Daily consumption
+- Weekly consumption
+- Monthly consumption
+- Room comparison
+- Device comparison
+
+---
+
+# 14. Energy Cost Calculation
+
+Allow admin to configure electricity tariff.
+
+Example:
+
+Energy consumed:
+
+100 kWh
+
+Electricity rate:
+
+₹8/kWh
+
+Cost:
+
+₹800
+
+Display:
+
+Today's cost
+
+This week's cost
+
+This month's cost
+
+Estimated monthly cost
+
+---
+
+# 15. Energy Optimization Engine
+
+Create an intelligent energy optimization engine.
+
+The engine should analyze:
+
+- Occupancy
+- Time
+- Room schedules
+- Temperature
+- Lighting
+- Equipment
+- Historical energy consumption
+
+Then generate recommendations.
+
+Example:
+
+"Conference Room A is consuming 18% more energy than similar rooms."
+
+"Meeting Room B has lights ON for 3 hours while unoccupied."
+
+"HVAC consumption is highest between 2 PM and 4 PM."
+
+"Estimated savings from optimization: ₹4,500/month."
+
+---
+
+# 16. Automation Rules Engine
+
+Create a flexible rules engine.
+
+Rule format:
+
+IF condition
+
+THEN action
+
+Examples:
+
+IF occupancy = 0
+
+AND room inactive > 10 minutes
+
+THEN lights = OFF
+
+---
+
+IF occupancy = 0
+
+AND room inactive > 20 minutes
+
+THEN HVAC = ECO
+
+---
+
+IF meeting starts in 15 minutes
+
+AND room is booked
+
+THEN HVAC = COMFORT
+
+AND lights = ON
+
+---
+
+IF office closes
+
+THEN non-essential devices = OFF
+
+---
+
+IF energy consumption exceeds threshold
+
+THEN create alert
+
+---
+
+# 17. User Preferences
+
+Allow employees to configure:
+
+- Preferred temperature
+- Lighting brightness
+- Meeting-room preferences
+- Notification settings
+- Work schedule
+
+Example:
+
+Employee preference:
+
+Temperature = 23°C
+
+Brightness = 70%
+
+When the employee enters an authorized room:
+
+System can apply their preferences.
+
+However, administrators must define acceptable limits.
+
+---
+
+# 18. Manual Override
+
+Users should be able to manually control devices.
+
+Example:
+
+Light:
+
+ON/OFF
+
+Brightness:
+
+0–100%
+
+Temperature:
+
+18–30°C within admin limits
+
+HVAC:
+
+ON/OFF/AUTO/ECO
+
+Equipment:
+
+ON/OFF
+
+Manual override should have a configurable expiration.
+
+Example:
+
+User turns light ON manually.
+
+Override expires after:
+
+30 minutes
+
+Then:
+
+System returns to AUTO mode.
+
+---
+
+# 19. Notifications & Alerts
+
+Create notification system.
+
+Alert examples:
+
+🚨 High energy consumption
+
+🚨 Room occupied after office hours
+
+🚨 HVAC malfunction
+
+🚨 Sensor offline
+
+🚨 Unusual power consumption
+
+🚨 Meeting room no-show
+
+🚨 Equipment left ON
+
+🚨 Temperature outside safe range
+
+Notifications can be:
+
+- In-app
+- Email
+- Optional SMS/push notifications
+
+---
+
+# 20. Sensor Management
+
+Create sensor management interface.
+
+Sensor types:
+
+- PIR
+- Temperature
+- Humidity
+- Light
+- Energy meter
+- Door sensor
+- Occupancy sensor
+- Air-quality sensor
+
+Each sensor should show:
+
+- Sensor ID
+- Room
+- Type
+- Status
+- Current value
+- Last update
+- Battery level
+- Connectivity
+
+Status:
+
+ONLINE
+
+OFFLINE
+
+WARNING
+
+MAINTENANCE
+
+---
+
+# 21. Device Communication
+
+Design the system so that IoT devices can communicate through:
+
+- MQTT
+- REST API
+- WebSocket
+
+Use MQTT for real-time IoT communication where appropriate.
+
+Example topic:
+
+office/room/101/occupancy
+
+office/room/101/temperature
+
+office/room/101/light
+
+office/room/101/hvac
+
+office/room/101/energy
+
+---
+
+# 22. Database Design
+
+Create a proper relational database.
+
+Recommended entities:
+
+Users
+
+Roles
+
+Departments
+
+Rooms
+
+RoomBookings
+
+Devices
+
+Sensors
+
+SensorReadings
+
+EnergyReadings
+
+OccupancyRecords
+
+AutomationRules
+
+UserPreferences
+
+Notifications
+
+Alerts
+
+Schedules
+
+MaintenanceRecords
+
+AuditLogs
+
+---
+
+# 23. Example Database Relationships
+
+User:
+
+- belongs to Department
+- has Role
+- has Preferences
+- creates Bookings
+
+Room:
+
+- has Devices
+- has Sensors
+- has Bookings
+- has Occupancy Records
+- has Energy Readings
+
+Device:
+
+- belongs to Room
+- has Energy Readings
+- has Maintenance Records
+
+---
+
+# 24. Backend API
+
+Create REST APIs.
+
+Authentication:
+
+POST /api/auth/login
+
+POST /api/auth/register
+
+POST /api/auth/logout
+
+Users:
+
+GET /api/users
+
+POST /api/users
+
+PUT /api/users/:id
+
+DELETE /api/users/:id
+
+Rooms:
+
+GET /api/rooms
+
+GET /api/rooms/:id
+
+POST /api/rooms
+
+PUT /api/rooms/:id
+
+DELETE /api/rooms/:id
+
+Bookings:
+
+GET /api/bookings
+
+POST /api/bookings
+
+PUT /api/bookings/:id
+
+DELETE /api/bookings/:id
+
+Devices:
+
+GET /api/devices
+
+POST /api/devices
+
+PUT /api/devices/:id
+
+POST /api/devices/:id/control
+
+Sensors:
+
+GET /api/sensors
+
+GET /api/sensors/:id/readings
+
+Energy:
+
+GET /api/energy/current
+
+GET /api/energy/daily
+
+GET /api/energy/weekly
+
+GET /api/energy/monthly
+
+Analytics:
+
+GET /api/analytics/occupancy
+
+GET /api/analytics/energy
+
+GET /api/analytics/savings
+
+---
+
+# 25. Authentication & Security
+
+Implement:
+
+- JWT authentication
+- Password hashing
+- Role-based authorization
+- Secure API endpoints
+- Input validation
+- Rate limiting
+- Audit logging
+- Secure environment variables
+- CORS configuration
+- Session/token expiration
+
+Never store plain-text passwords.
+
+---
+
+# 26. Frontend
+
+Build a modern responsive frontend.
+
+Recommended stack:
+
+- React.js
+- Tailwind CSS
+- React Router
+- Axios
+- Recharts
+- Lucide React icons
+
+Create pages:
+
+1. Login
+2. Dashboard
+3. Rooms
+4. Meeting Rooms
+5. Room Details
+6. Devices
+7. Sensors
+8. Energy
+9. Analytics
+10. Automation
+11. Users
+12. Schedules
+13. Notifications
+14. Settings
+15. Profile
+
+---
+
+# 27. Dashboard UI Design
+
+Use a professional smart-building style.
+
+Design characteristics:
+
+- Clean
+- Modern
+- Minimal
+- Responsive
+- Mobile-friendly
+- Card-based layout
+- Interactive charts
+- Real-time status indicators
+- Dark/light mode
+
+Dashboard layout:
+
+Sidebar
+
+Top navigation
+
+Statistics cards
+
+Office map
+
+Room status
+
+Energy chart
+
+Occupancy chart
+
+Alerts
+
+Automation activity
+
+---
+
+# 28. Real-Time Updates
+
+Use WebSockets or Socket.IO.
+
+The dashboard should automatically update when:
+
+- Occupancy changes
+- Temperature changes
+- Light changes
+- HVAC changes
+- Energy changes
+- Meeting starts
+- Device status changes
+- Alert occurs
+
+Avoid requiring users to refresh the page.
+
+---
+
+# 29. AI-Based Smart Recommendations
+
+Add an optional AI recommendation module.
+
+The AI should analyze historical data and generate useful recommendations.
+
+Examples:
+
+"Reduce HVAC operation in Room 204 between 1 PM and 2 PM."
+
+"Lighting consumption increased by 12% this week."
+
+"Room 101 is frequently booked but rarely occupied."
+
+"Consider increasing the vacancy timeout from 5 to 10 minutes."
+
+"Estimated monthly energy savings after optimization: ₹6,200."
+
+The AI must explain why it generated each recommendation.
+
+Do not allow AI recommendations to directly perform dangerous or irreversible actions without configured authorization.
+
+---
+
+# 30. Predictive Energy Management
+
+Use historical data to predict:
+
+- Tomorrow's energy consumption
+- Peak energy hours
+- Expected monthly cost
+- High-consumption rooms
+- Potential savings
+
+Display:
+
+Predicted consumption
+
+Expected cost
+
+Potential savings
+
+Confidence level
+
+---
+
+# 31. Office Floor Map
+
+Create an interactive office floor plan.
+
+Example:
+
++----------------------------+
+| Room 101 | Room 102       |
+| 🟢       | 🔴             |
+|          | 5 people       |
++----------------------------+
+| Meeting  | Conference     |
+| 🟡       | 🟢             |
++----------------------------+
+| Pantry   | Open Workspace |
+| 🟢       | 🔴             |
++----------------------------+
+
+Clicking a room should open:
+
+- Occupancy
+- Temperature
+- Lighting
+- HVAC
+- Energy
+- Current meeting
+- Devices
+- Sensors
+- Controls
+
+---
+
+# 32. Analytics
+
+Create analytics dashboard.
+
+Charts:
+
+1. Energy consumption over time
+2. Energy by room
+3. Energy by device
+4. Occupancy over time
+5. Meeting-room utilization
+6. Lighting consumption
+7. HVAC consumption
+8. Equipment consumption
+9. Energy cost
+10. Estimated savings
+
+Allow date filtering:
+
+- Today
+- Yesterday
+- Last 7 days
+- Last 30 days
+- Custom range
+
+---
+
+# 33. Reports
+
+Generate reports:
+
+### Daily Report
+
+Include:
+
+- Total energy
+- Energy cost
+- Peak consumption
+- Average occupancy
+- Room utilization
+- Alerts
+- Estimated savings
+
+### Monthly Report
+
+Include:
+
+- Total consumption
+- Total cost
+- Energy trends
+- Top-consuming rooms
+- Top-consuming devices
+- Savings
+- Recommendations
+
+Allow export:
+
+- PDF
+- CSV
+- Excel
+
+---
+
+# 34. Audit Logs
+
+Track important activities.
+
+Example:
+
+Admin changed Room 101 temperature limit.
+
+Employee booked Meeting Room A.
+
+Facility manager turned HVAC OFF.
+
+Automation turned lights OFF.
+
+Sensor disconnected.
+
+Store:
+
+- User
+- Action
+- Device/room
+- Timestamp
+- Previous value
+- New value
+
+---
+
+# 35. Fail-Safe System
+
+The system must continue operating safely if:
+
+- Internet connection fails
+- Sensor goes offline
+- Backend temporarily fails
+- MQTT disconnects
+- Database is unavailable
+
+Implement sensible fallback behavior.
+
+Example:
+
+If occupancy sensor is offline:
+
+Do not aggressively turn everything OFF.
+
+If temperature sensor fails:
+
+Use safe fallback temperature rules.
+
+If central automation fails:
+
+Devices should remain in their last safe state.
+
+---
+
+# 36. Privacy
+
+If cameras are used:
+
+- Avoid storing unnecessary video.
+- Prefer anonymous occupancy counting.
+- Do not use facial recognition unless explicitly required.
+- Provide privacy settings.
+- Restrict access to sensitive data.
+
+---
+
+# 37. Demo / Simulation Mode
+
+Because real IoT hardware may not be available, create a simulator.
+
+The simulator should generate:
+
+- Occupancy changes
+- Temperature changes
+- Light levels
+- Energy consumption
+- Device status
+- Meeting schedules
+
+Example:
+
+Every 5–10 seconds randomly update sensor values.
+
+Allow:
+
+START SIMULATION
+
+STOP SIMULATION
+
+RESET DATA
+
+SIMULATE OCCUPANCY
+
+SIMULATE MEETING
+
+SIMULATE HIGH ENERGY
+
+SIMULATE SENSOR FAILURE
+
+This allows the entire project to be demonstrated without physical hardware.
+
+---
+
+# 38. Seed Data
+
+Create realistic demo data.
+
+Example rooms:
+
+- Meeting Room A
+- Meeting Room B
+- Conference Room
+- HR Room
+- Development Room
+- Manager Room
+- Open Workspace
+- Pantry
+
+Create sample users.
+
+Create sample devices.
+
+Create sample sensors.
+
+Create sample meetings.
+
+Create sample energy readings.
+
+---
+
+# 39. Smart Automation Example
+
+Scenario:
+
+Employee enters Meeting Room A.
+
+Occupancy sensor detects 1 person.
+
+System:
+
+1. Marks room occupied.
+2. Turns lights ON.
+3. Sets brightness to 70%.
+4. Reads temperature.
+5. Adjusts HVAC to preferred temperature.
+6. Starts monitoring energy consumption.
+7. Updates dashboard in real time.
+
+Employee leaves.
+
+System detects:
+
+occupancy = 0
+
+Starts vacancy timer.
+
+After 10 minutes:
+
+1. Lights OFF.
+2. HVAC ECO mode.
+3. Equipment standby.
+4. Room becomes available.
+5. Energy-saving event logged.
+
+---
+
+# 40. Meeting Preparation Example
+
+Meeting:
+
+10:00 AM
+
+Room:
+
+Conference Room
+
+Attendees:
+
+12
+
+Equipment:
+
+Projector + Video Conference
+
+At 9:45 AM:
+
+- HVAC starts.
+- Lights turn ON.
+- Projector enters standby/preparation mode.
+- Room status becomes "Preparing".
+
+At 10:00 AM:
+
+- Meeting starts.
+- Room becomes occupied.
+
+At 10:10 AM:
+
+If nobody enters:
+
+- Detect no-show.
+- Notify organizer.
+
+---
+
+# 41. Energy Saving Example
+
+If a room is:
+
+Vacant
+
+Lights ON
+
+HVAC ON
+
+for 15 minutes:
+
+System generates:
+
+"Energy-saving action detected."
+
+Then:
+
+Lights OFF
+
+HVAC ECO
+
+Event recorded:
+
+Energy saved estimate.
+
+---
+
+# 42. Technology Stack
+
+Use this stack unless there is a strong technical reason to change it:
+
+Frontend:
+
+React.js
+
+Tailwind CSS
+
+React Router
+
+Axios
+
+Recharts
+
+Backend:
+
+Python
+
+FastAPI or Flask
+
+Database:
+
+PostgreSQL
+
+ORM:
+
+SQLAlchemy
+
+Real-time:
+
+WebSocket / Socket.IO
+
+IoT:
+
+MQTT
+
+Authentication:
+
+JWT
+
+Deployment:
+
+Docker
+
+Optional:
+
+Redis
+
+Celery
+
+AI:
+
+Python ML/LLM service
+
+---
+
+# 43. Project Structure
+
+Create a clean structure:
+
+smart-office/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── layouts/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── App.jsx
+│
+├── backend/
+│   ├── app/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── automation/
+│   │   ├── mqtt/
+│   │   ├── analytics/
+│   │   └── main.py
+│
+├── simulator/
+│
+├── database/
+│
+├── docker/
+│
+├── tests/
+│
+├── README.md
+│
+└── docker-compose.yml
+
+---
+
+# 44. Code Quality Requirements
+
+Write production-quality code.
+
+Requirements:
+
+- Clean architecture
+- Reusable components
+- Meaningful variable names
+- Comments for complex logic
+- Error handling
+- Validation
+- Type safety where possible
+- API documentation
+- Unit tests
+- Integration tests
+- Responsive UI
+- No unnecessary duplicate code
+
+Do not create fake buttons that do nothing.
+
+Every major UI control should perform a real operation.
+
+---
+
+# 45. Error Handling
+
+Show user-friendly errors.
+
+Examples:
+
+"Unable to connect to room sensor."
+
+"Meeting room is no longer available."
+
+"Temperature must be within administrator limits."
+
+"Device is currently offline."
+
+"Unable to save automation rule."
+
+Never expose raw server errors to normal users.
+
+---
+
+# 46. Performance
+
+Optimize the application for:
+
+- Fast dashboard loading
+- Efficient database queries
+- Real-time updates
+- Large sensor datasets
+- Multiple simultaneous users
+- Multiple rooms
+- Thousands of sensor readings
+
+Use pagination where necessary.
+
+Use caching for frequently requested data.
+
+Use database indexes for:
+
+- room_id
+- device_id
+- timestamp
+- user_id
+- booking time
+
+---
+
+# 47. Testing
+
+Create tests for:
+
+### Authentication
+
+- Login
+- Logout
+- Invalid password
+- Role authorization
+
+### Occupancy
+
+- Person enters room
+- Person leaves room
+- Vacancy timeout
+
+### Lighting
+
+- Occupied → ON
+- Vacant → OFF
+
+### HVAC
+
+- Occupied → comfort mode
+- Vacant → eco mode
+
+### Meeting Rooms
+
+- Booking
+- Cancellation
+- Conflict detection
+- No-show
+
+### Energy
+
+- Consumption calculation
+- Cost calculation
+- Daily aggregation
+
+### Automation
+
+- Rule execution
+- Manual override
+- Override expiration
+
+---
+
+# 48. Docker
+
+Create:
+
+docker-compose.yml
+
+Services:
+
+- frontend
+- backend
+- postgres
+- mqtt
+- redis (optional)
+
+Provide one command to start:
+
+docker compose up --build
+
+---
+
+# 49. README
+
+Create a complete README containing:
+
+- Project overview
+- Features
+- Architecture
+- Technology stack
+- Installation
+- Environment variables
+- Database setup
+- MQTT setup
+- Simulator setup
+- Running frontend
+- Running backend
+- API documentation
+- Demo credentials
+- Screenshots placeholders
+- Future improvements
+
+---
+
+# 50. Final Requirement
+
+Do not only create a static frontend mockup.
+
+Build a functional full-stack prototype where:
+
+Frontend ↔ Backend ↔ Database ↔ Automation Engine ↔ IoT Simulator
+
+all communicate correctly.
+
+The system should demonstrate the complete workflow:
+
+Occupancy detection
+↓
+Automation engine
+↓
+Decision
+↓
+Device control
+↓
+Energy measurement
+↓
+Database
+↓
+Analytics
+↓
+Dashboard
+
+The final result should look like a real **Smart Office / Smart Building Management System**, suitable for:
+
+- College project demonstration
+- Hackathon
+- Final-year project
+- Startup prototype
+- IoT demonstration
+- Energy-management project
+
+Make the UI highly professional and responsive.
+
+Use realistic sample data.
+
+Make all major features functional.
+
+Provide complete source code, database schema, API documentation, setup instructions, test data, simulator, and deployment instructions.
+
+## IMPORTANT DEVELOPMENT RULE
+
+Build the project in phases:
+
+Phase 1 → Database + Backend API  
+Phase 2 → Authentication + RBAC  
+Phase 3 → IoT Simulator  
+Phase 4 → Automation Engine  
+Phase 5 → Frontend Dashboard  
+Phase 6 → Meeting Room Management  
+Phase 7 → Energy Analytics  
+Phase 8 → Notifications + Alerts  
+Phase 9 → AI Recommendations  
+Phase 10 → Testing + Docker + Documentation
+
+After completing each phase, verify that it works before moving to the next phase.
+
+Do not skip error handling, validation, security, or testing.

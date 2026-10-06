@@ -1,0 +1,1 @@
+- [Smart Office roles](smart-office-roles.md) — enforce roles from Clerk public metadata, defaulting unknown users to employee.

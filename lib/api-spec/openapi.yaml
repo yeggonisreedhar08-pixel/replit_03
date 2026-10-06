@@ -3,13 +3,15 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Smart office monitoring, automation, bookings, and energy management API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: office
+    description: Smart office operations and telemetry
 paths:
   /healthz:
     get:
@@ -24,6 +26,248 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [office]
+      summary: Get office dashboard metrics and recent activity
+      responses:
+        "200":
+          description: Dashboard snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
+  /rooms:
+    get:
+      operationId: getRooms
+      tags: [office]
+      summary: List office rooms and their current conditions
+      responses:
+        "200":
+          description: Current rooms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+  /rooms/{roomId}:
+    patch:
+      operationId: updateRoomControls
+      tags: [office]
+      summary: Set room lighting and climate controls
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomControlsInput"
+      responses:
+        "200":
+          description: Updated room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "404":
+          description: Room not found
+  /devices:
+    get:
+      operationId: getDevices
+      tags: [office]
+      summary: List connected office equipment
+      responses:
+        "200":
+          description: Current devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+  /devices/{deviceId}:
+    patch:
+      operationId: updateDevice
+      tags: [office]
+      summary: Change an equipment device state
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceControlInput"
+      responses:
+        "200":
+          description: Updated device
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "404":
+          description: Device not found
+  /bookings:
+    get:
+      operationId: getBookings
+      tags: [office]
+      summary: List upcoming room bookings
+      responses:
+        "200":
+          description: Current bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [office]
+      summary: Create a meeting room booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Created booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "409":
+          description: Room is already booked for that time
+  /bookings/{bookingId}:
+    delete:
+      operationId: cancelBooking
+      tags: [office]
+      summary: Cancel a room booking
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Booking cancelled
+        "404":
+          description: Booking not found
+  /energy:
+    get:
+      operationId: getEnergy
+      tags: [office]
+      summary: Get energy consumption and cost analytics
+      parameters:
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: week
+      responses:
+        "200":
+          description: Energy analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnergyAnalytics"
+  /alerts:
+    get:
+      operationId: getAlerts
+      tags: [office]
+      summary: List active and recent alerts
+      responses:
+        "200":
+          description: Alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OfficeAlert"
+  /alerts/{alertId}/acknowledge:
+    patch:
+      operationId: acknowledgeAlert
+      tags: [office]
+      summary: Acknowledge an alert
+      parameters:
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated alert
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficeAlert"
+        "404":
+          description: Alert not found
+  /automation:
+    get:
+      operationId: getAutomation
+      tags: [office]
+      summary: Get automation mode, rules, and simulator state
+      responses:
+        "200":
+          description: Automation snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AutomationSnapshot"
+    patch:
+      operationId: updateAutomation
+      tags: [office]
+      summary: Enable or pause automatic control
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationInput"
+      responses:
+        "200":
+          description: Updated automation state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AutomationSnapshot"
+  /simulator/actions:
+    post:
+      operationId: runSimulatorAction
+      tags: [office]
+      summary: Run a demo sensor or office event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimulatorActionInput"
+      responses:
+        "200":
+          description: Updated office dashboard snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +277,198 @@ components:
           type: string
       required:
         - status
+    Room:
+      type: object
+      required: [id, name, zone, category, status, people, capacity, temperature, humidity, daylight, lightsOn, brightness, hvacMode, energyKw, currentMeeting, overrideUntil]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        zone: { type: string }
+        category: { type: string }
+        status: { type: string, enum: [available, occupied, reserved, maintenance, offline] }
+        people: { type: integer }
+        capacity: { type: integer }
+        temperature: { type: number }
+        humidity: { type: number }
+        daylight: { type: integer }
+        lightsOn: { type: boolean }
+        brightness: { type: integer }
+        hvacMode: { type: string, enum: [auto, comfort, eco, off] }
+        energyKw: { type: number }
+        currentMeeting: { type: ["string", "null"] }
+        overrideUntil: { type: ["string", "null"] }
+    RoomControlsInput:
+      type: object
+      properties:
+        lightsOn: { type: boolean }
+        brightness: { type: integer, minimum: 0, maximum: 100 }
+        temperature: { type: number, minimum: 18, maximum: 30 }
+        hvacMode: { type: string, enum: [auto, comfort, eco, off] }
+        overrideMinutes: { type: integer, minimum: 1, maximum: 240 }
+    Device:
+      type: object
+      required: [id, name, roomId, roomName, category, state, watts, essential, updatedAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        roomId: { type: string }
+        roomName: { type: string }
+        category: { type: string }
+        state: { type: string, enum: [on, standby, off, offline, maintenance] }
+        watts: { type: number }
+        essential: { type: boolean }
+        updatedAt: { type: string, format: date-time }
+    DeviceControlInput:
+      type: object
+      required: [state]
+      properties:
+        state: { type: string, enum: [on, standby, off] }
+        overrideMinutes: { type: integer, minimum: 1, maximum: 240 }
+    Booking:
+      type: object
+      required: [id, title, roomId, roomName, organizer, attendees, startsAt, endsAt, status, equipment]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        roomId: { type: string }
+        roomName: { type: string }
+        organizer: { type: string }
+        attendees: { type: integer }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        status: { type: string, enum: [scheduled, preparing, in-progress] }
+        equipment:
+          type: array
+          items: { type: string }
+    BookingInput:
+      type: object
+      required: [title, roomId, organizer, attendees, startsAt, endsAt, equipment]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 120 }
+        roomId: { type: string, minLength: 1 }
+        organizer: { type: string, minLength: 1, maxLength: 120 }
+        attendees: { type: integer, minimum: 1, maximum: 100 }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        equipment:
+          type: array
+          items: { type: string }
+    EnergyPoint:
+      type: object
+      required: [label, actual, baseline]
+      properties:
+        label: { type: string }
+        actual: { type: number }
+        baseline: { type: number }
+    RoomEnergy:
+      type: object
+      required: [roomId, roomName, kwh]
+      properties:
+        roomId: { type: string }
+        roomName: { type: string }
+        kwh: { type: number }
+    EnergyAnalytics:
+      type: object
+      required: [period, totalKwh, cost, peakKw, savedPercent, tariff, series, byRoom, breakdown]
+      properties:
+        period: { type: string, enum: [day, week, month] }
+        totalKwh: { type: number }
+        cost: { type: number }
+        peakKw: { type: number }
+        savedPercent: { type: number }
+        tariff: { type: number }
+        series:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyPoint" }
+        byRoom:
+          type: array
+          items: { $ref: "#/components/schemas/RoomEnergy" }
+        breakdown:
+          type: object
+          required: [lighting, hvac, equipment]
+          properties:
+            lighting: { type: number }
+            hvac: { type: number }
+            equipment: { type: number }
+    OfficeAlert:
+      type: object
+      required: [id, type, severity, message, roomId, createdAt, acknowledged]
+      properties:
+        id: { type: string }
+        type: { type: string }
+        severity: { type: string, enum: [critical, warning, info] }
+        message: { type: string }
+        roomId: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+        acknowledged: { type: boolean }
+    Activity:
+      type: object
+      required: [id, action, detail, actor, createdAt]
+      properties:
+        id: { type: string }
+        action: { type: string }
+        detail: { type: string }
+        actor: { type: string }
+        createdAt: { type: string, format: date-time }
+    Dashboard:
+      type: object
+      required: [employees, occupiedRooms, totalRooms, availableRooms, currentKw, todayKwh, temperature, activeDevices, savedPercent, rooms, energySeries, occupancySeries, alerts, activity]
+      properties:
+        employees: { type: integer }
+        occupiedRooms: { type: integer }
+        totalRooms: { type: integer }
+        availableRooms: { type: integer }
+        currentKw: { type: number }
+        todayKwh: { type: number }
+        temperature: { type: number }
+        activeDevices: { type: integer }
+        savedPercent: { type: number }
+        rooms:
+          type: array
+          items: { $ref: "#/components/schemas/Room" }
+        energySeries:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyPoint" }
+        occupancySeries:
+          type: array
+          items:
+            type: object
+            required: [label, people]
+            properties:
+              label: { type: string }
+              people: { type: integer }
+        alerts:
+          type: array
+          items: { $ref: "#/components/schemas/OfficeAlert" }
+        activity:
+          type: array
+          items: { $ref: "#/components/schemas/Activity" }
+    AutomationRule:
+      type: object
+      required: [id, name, description, enabled]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        enabled: { type: boolean }
+    AutomationSnapshot:
+      type: object
+      required: [enabled, simulationRunning, rules]
+      properties:
+        enabled: { type: boolean }
+        simulationRunning: { type: boolean }
+        rules:
+          type: array
+          items: { $ref: "#/components/schemas/AutomationRule" }
+    AutomationInput:
+      type: object
+      required: [enabled]
+      properties:
+        enabled: { type: boolean }
+    SimulatorActionInput:
+      type: object
+      required: [action]
+      properties:
+        action: { type: string, enum: [start, stop, reset, occupancy, meeting, high-energy, sensor-failure] }
+        roomId: { type: string }
 

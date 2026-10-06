@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Smart Office Energy Manager"
+description = "A smart-building operations app for monitoring office rooms, occupancy, device controls, energy use, meeting bookings, and automation using a built-in IoT simulator."
+version = "1.0.0"
+id = "artifacts/smart-office"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23785
+
+[services.development]
+run = "pnpm --filter @workspace/smart-office run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/smart-office", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/smart-office/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23785"
+BASE_PATH = "/"

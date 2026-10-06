@@ -1,5 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { runSimulationTick } from "./routes/office";
 
 const rawPort = process.env["PORT"];
 
@@ -23,3 +24,10 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
 });
+
+const simulator = setInterval(() => {
+  void runSimulationTick().catch((error: unknown) => {
+    logger.error({ err: error }, "Office simulator tick failed");
+  });
+}, 10_000);
+simulator.unref();
